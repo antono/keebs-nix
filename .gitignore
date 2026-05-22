@@ -1,0 +1,9 @@
+/result
+/result-*
+/.west
+/modules
+/zephyr
+/zmk
+/build
+/.claude/
+/.codanna/
