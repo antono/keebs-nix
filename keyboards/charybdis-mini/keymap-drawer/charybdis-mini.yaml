@@ -1,0 +1,269 @@
+layout: {zmk_keyboard: charybdis, layout_name: charybdis_6col_layout}
+layers:
+  default:
+  - {t: ']', h: Gui}
+  - Q
+  - W
+  - E
+  - R
+  - T
+  - Y
+  - U
+  - I
+  - O
+  - P
+  - {t: '[', h: Gui}
+  - {t: '`', h: Ctrl}
+  - A
+  - S
+  - D
+  - F
+  - G
+  - H
+  - J
+  - K
+  - L
+  - ;
+  - {t: '''', h: Ctrl}
+  - {t: '-', h: Alt}
+  - Z
+  - {t: X, h: Ctl+X}
+  - {t: C, h: Ctl+C}
+  - {t: V, h: Ctl+V}
+  - B
+  - N
+  - M
+  - ','
+  - .
+  - /
+  - {t: \, h: Alt}
+  - {t: ↹, h: raise}
+  - {t: ␣, h: Shift}
+  - {t: ⏎, h: lower}
+  - {t: Esc, h: lower}
+  - {t: ⌫, h: raise}
+  mouse:
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - Middle Click
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - lower
+  - raise
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - Left Click
+  - Left Click
+  - Right Click
+  - Middle Click
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  lower:
+  - {t: F1, h: Gui}
+  - F2
+  - F3
+  - F4
+  - F5
+  - F6
+  - F7
+  - F8
+  - F9
+  - F10
+  - F11
+  - {t: F12, h: Gui}
+  - {t: +, h: Ctrl}
+  - '!'
+  - '@'
+  - '#'
+  - $
+  - '%'
+  - ^
+  - '&'
+  - '*'
+  - (
+  - )
+  - {t: '-', h: Ctrl}
+  - {t: '=', h: Alt}
+  - '1'
+  - '2'
+  - '3'
+  - '4'
+  - '5'
+  - '6'
+  - '7'
+  - '8'
+  - '9'
+  - '0'
+  - Alt
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {type: held}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  raise:
+  - {t: KP NUM, h: Gui}
+  - KP SLASH
+  - KP 7
+  - KP 8
+  - KP 9
+  - KP MINUS
+  - Vol Up
+  - Home
+  - Print Scrn
+  - Page Up
+  - SLCK
+  - {t: CLCK, h: Gui}
+  - {t: '=', h: Ctrl}
+  - KP MULTIPLY
+  - KP 4
+  - KP 5
+  - KP 6
+  - KP PLUS
+  - ←
+  - ↓
+  - ↑
+  - →
+  - Insert
+  - {t: APP, h: Ctrl}
+  - Alt
+  - KP 0
+  - KP 1
+  - KP 2
+  - KP 3
+  - KP DOT
+  - Vol Down
+  - End
+  - ↓
+  - Page Down
+  - Pause Break
+  - Alt
+  - {type: held}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  adjust:
+  - Boot
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - Boot
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - Reset
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - Reset
+  - {type: held}
+  - {t: ▽, type: trans}
+  - {type: held}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  symbol:
+  - {t: ▽, type: trans}
+  - ''
+  - ''
+  - '{'
+  - '}'
+  - '|'
+  - '`'
+  - '~'
+  - <
+  - '>'
+  - \
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - ''
+  - ''
+  - (
+  - )
+  - ':'
+  - +
+  - '-'
+  - /
+  - '*'
+  - ''''
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - ''
+  - ''
+  - '['
+  - ']'
+  - '?'
+  - '&'
+  - '='
+  - _
+  - .
+  - '"'
+  - {t: ▽, type: trans}
+  - ''
+  - ''
+  - {t: ▽, type: trans}
+  - ''
+  - ''
+combos:
+- p: [19, 22]
+  k: CLCK
+- p: [13, 16]
+  k: {t: default, h: toggle}
+- p: [39, 40]
+  k: RSHIFT
+- p: [31, 34]
+  k: {t: symbol, h: toggle}
+- p: [0, 29]
+  k: {t: adjust, h: toggle}
+- p: [11, 30]
+  k: {t: adjust, h: toggle}
+- p: [24, 11]
+  k: Boot

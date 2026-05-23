@@ -1,0 +1,167 @@
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/pointing.h>
+
+#define DEF 0
+#define MOU 1
+#define LWR 2
+#define RSE 3
+#define ADJ 4
+#define SYM 5
+
+
+// ╭──────┬──────┬──────┬──────┬──────┬──────╮  ╭──────┬──────┬──────┬──────┬──────┬──────╮
+//    00     01     02     03    04      05        06     07     08     09     10     11
+// ├──────┼──────┼──────┼──────┼──────┼──────┤  ├──────┼──────┼──────┼──────┼──────┼──────┤
+//    12     13     14     15    16      17        18     19     20     21     22     23
+// ├──────┼──────┼──────┼──────┼──────┼──────┤  ├──────┼──────┼──────┼──────┼──────┼──────┤
+//    24     25     26     27    28      29        30     31     32     33     34     35
+// ╰──────┴──────┴──────┼──────┼──────┼──────┤  ├──────┼──────┼──────┴──────┴──────┴──────╯
+//                         36     37     38        39     40
+//                      ╰──────┴──────┴──────╯  ╰──────┴──────╯
+
+
+#define KEYS_L 0 1 2 3 4 10 11 12 13 14 20 21 22 23 24
+#define KEYS_R 5 6 7 8 9 15 16 17 18 19 25 26 27 28 29
+#define THUMBS 30 31 32 33 34 35
+
+&sk {
+  release-after-ms = <600>;
+  quick-release;
+};
+
+&sl {
+  ignore-modifiers;
+};
+
+&mt {
+  flavor = "tap-preferred";
+};
+
+&lt {
+  flavor = "balanced";
+  tapping-term-ms = <200>;
+  quick-tap-ms = <175>;
+};
+
+&caps_word {
+  /delete-property/ ignore-modifiers;
+};
+
+/ {
+  behaviors {
+    smart_shift: smart_shift {
+      compatible = "zmk,behavior-mod-morph";
+      #binding-cells = <0>;
+      bindings = <&sk LSHIFT>, <&caps_word>;
+      mods = <(MOD_LSFT)>;
+    };
+  };
+
+  combos {
+    compatible = "zmk,combos";
+    timeout-ms = <20>;
+    require-prior-idle-ms = <250>;
+
+    combo_caps {
+      key-positions = <19 22>;
+      bindings = <&kp CLCK>;
+    };
+    combo_default_layer {
+      key-positions = <13 16>;
+      bindings = <&to DEF>;
+    };
+    combo_rshift {
+      key-positions = <39 40>;
+      bindings = <&kp RSHIFT>;
+    };
+    combo_symbol_layer {
+      key-positions = <31 34>;
+      bindings = <&to SYM>;
+    };
+    combo_adj_layer_left {
+      key-positions = <00 29>;
+      bindings = <&to ADJ>;
+    };
+    combo_adj_layer_right {
+      key-positions = <11 30>;
+      bindings = <&to ADJ>;
+    };
+    combo_bootloader_central {
+      key-positions = <24 11>;
+      bindings = <&bootloader>;
+      require-prior-idle-ms = <2000>;
+    };
+  };
+
+  conditional_layers {
+    compatible = "zmk,conditional-layers";
+
+    tri-layer {
+      if-layers = <2 3>;
+      then-layer = <4>;
+    };
+  };
+
+  chosen {
+    zmk,physical-layout = &charybdis_6col_layout;
+  };
+
+  keymap {
+    compatible = "zmk,keymap";
+
+    default_layer {
+      bindings = <
+        &mt LGUI RBKT     &kp Q   &kp W           &kp E         &kp R             &kp T         &kp Y         &kp U            &kp I         &kp O     &kp P      &mt RGUI LBKT
+        &mt LCTRL GRAVE   &kp A   &kp S           &kp D         &kp F             &kp G         &kp H         &kp J            &kp K         &kp L     &kp SEMI   &mt RCTRL SQT
+        &mt LALT MINUS    &kp Z   &mt LC(X) X     &mt LC(C) C   &mt LC(V) V       &kp B         &kp N         &kp M            &kp COMMA     &kp DOT   &kp FSLH   &mt RALT BSLH
+                  &lt RSE TAB &mt LSHFT SPACE     &lt LWR RET                     &lt LWR ESC   &lt RSE BSPC
+      >;
+    };
+
+    mouse_layer {
+      bindings = <
+        &trans      &trans  &trans     &trans  &trans     &trans    &trans  &trans  &trans  &trans  &trans     &trans
+        &trans      &trans  &trans     &trans  &trans     &trans    &trans  &trans  &trans  &trans  &trans     &trans
+        &mkp MCLK   &trans  &trans     &mo LWR &mo RSE    &trans    &trans  &trans  &trans  &trans  &trans  &mkp LCLK
+                        &mkp LCLK   &mkp RCLK  &mkp MCLK    &trans    &trans
+      >;
+    };
+
+    lower_layer {
+      bindings = <
+        &mt LGUI F1      &kp F2     &kp F3   &kp F4        &kp F5     &kp F6      &kp F7      &kp F8     &kp F9        &kp F10    &kp F11    &mt RGUI F12
+        &mt LCTRL PLUS   &kp EXCL   &kp AT   &kp HASH      &kp DLLR   &kp PRCNT   &kp CARET   &kp AMPS   &kp STAR      &kp LPAR   &kp RPAR   &mt RCTRL MINUS
+        &mt LALT EQUAL   &kp N1     &kp N2   &kp N3        &kp N4     &kp N5      &kp N6      &kp N7     &kp N8        &kp N9     &kp N0     &kp RALT
+                                              &trans        &trans     &trans      &trans      &trans
+      >;
+    };
+
+    raise_layer {
+      bindings = <
+        &mt LGUI KP_NUM   &kp KP_SLASH      &kp KP_N7   &kp KP_N8   &kp KP_N9   &kp KP_MINUS   &kp C_VOL_UP   &kp HOME   &kp PSCRN   &kp PG_UP   &kp SLCK          &mt RGUI CLCK
+        &mt LCTRL EQUAL   &kp KP_MULTIPLY   &kp KP_N4   &kp KP_N5   &kp KP_N6   &kp KP_PLUS    &kp LEFT       &kp DOWN   &kp UP      &kp RIGHT   &kp INS           &mt RCTRL  K_APP
+        &kp LALT          &kp KP_N0         &kp KP_N1   &kp KP_N2   &kp KP_N3   &kp KP_DOT     &kp C_VOL_DN   &kp END    &kp DOWN    &kp PG_DN   &kp PAUSE_BREAK   &kp RALT
+                                                        &trans      &trans      &trans         &trans         &trans
+      >;
+    };
+
+    adjust_layer {
+      bindings = <
+        &bootloader     &none   &none   &none          &none          &none          &none          &none          &none          &none          &none          &bootloader
+        &none           &none   &none   &none          &none          &none          &none          &none          &none          &none          &none          &none
+        &sys_reset      &none   &none   &none          &none          &none          &none          &none          &none          &none          &none          &sys_reset
+                                        &trans         &trans         &trans         &trans         &trans
+      >;
+    };
+
+    symbol_layer {
+      bindings = <
+        &trans   &none &none &kp LEFT_BRACE       &kp RIGHT_BRACE       &kp PIPE              &kp GRAVE &kp TILDE &kp LESS_THAN &kp GREATER_THAN &kp BACKSLASH            &trans
+        &trans   &none &none &kp LEFT_PARENTHESIS &kp RIGHT_PARENTHESIS &kp COLON             &kp PLUS  &kp MINUS &kp SLASH     &kp ASTRK        &kp SINGLE_QUOTE         &trans
+        &trans   &none &none &kp LEFT_BRACKET     &kp RIGHT_BRACKET     &kp QUESTION          &kp AMPS  &kp EQUAL &kp UNDER     &kp PERIOD       &kp DOUBLE_QUOTES        &trans
+                    &none                &none                 &trans                &none     &none
+      >;
+    };
+  };
+};

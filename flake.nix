@@ -218,6 +218,29 @@
             meta = mkMeta "ZMK settings-reset firmware for the Dao";
           };
 
+          charybdis-mini = buildSplitKeyboard {
+            name = "charybdis-mini";
+            src = keebSrc ./keyboards/charybdis-mini;
+            board = "seeeduino_xiao_ble";
+            shield = "charybdis_%PART%";
+            parts = [
+              "left"
+              "right"
+            ];
+            inherit zephyrDepsHash westDeps;
+            meta = mkMeta "ZMK firmware for the Charybdis Mini (split, Seeeduino XIAO BLE)";
+          };
+
+          # Charybdis Mini settings reset is built on seeeduino_xiao_ble.
+          charybdis-mini-reset = buildKeyboard {
+            name = "charybdis-mini-reset";
+            src = keebSrc ./keyboards/charybdis-mini;
+            board = "seeeduino_xiao_ble";
+            shield = "settings_reset";
+            inherit zephyrDepsHash westDeps;
+            meta = mkMeta "ZMK settings-reset firmware for the Charybdis Mini";
+          };
+
           # Collect every keyboard's firmware under one output with stable,
           # human-readable names. Each build is copied generically by globbing
           # its actual *.uf2 outputs and rewriting the leading "zmk" to the
@@ -234,6 +257,8 @@
             dao = dao;
             dao_studio = dao-studio;
             dao_settings_reset = dao-reset;
+            charybdis_mini = charybdis-mini;
+            charybdis_mini_settings_reset = charybdis-mini-reset;
           };
           firmware = pkgs.runCommand "keebs-firmware" { } (
             ''
@@ -274,6 +299,9 @@
           flash-dao-studio = flashFor dao-studio;
           flash-dao-reset = flashFor dao-reset;
 
+          flash-charybdis-mini = flashFor charybdis-mini;
+          flash-charybdis-mini-reset = flashFor charybdis-mini-reset;
+
           update = zmk-nix.packages.${system}.update;
         }
       );
@@ -304,6 +332,7 @@
               draw tk44          tk44.keymap         tk44.json          default
               draw mriya46       mriya.keymap        mriya.json         default
               draw dao           dao.keymap          info.json          LAYOUT
+              draw charybdis-mini charybdis.keymap charybdis.json default_transform
             '';
           };
         in

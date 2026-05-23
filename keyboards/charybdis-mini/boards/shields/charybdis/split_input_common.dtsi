@@ -1,0 +1,49 @@
+#include <dt-bindings/zmk/input_transform.h>
+#include <input/processors.dtsi>
+
+#define DEF 0
+#define MOU 1
+#define LWR 2
+#define RSE 3
+#define ADJ 4
+#define SYM 5
+
+/ {
+  split_inputs {
+    #address-cells = <1>;
+    #size-cells = <0>;
+
+    trackball_split: trackball_split@0 {
+      compatible = "zmk,input-split";
+      reg = <0>;
+    };
+  };
+
+  trackball_listener: trackball_listener {
+    compatible = "zmk,input-listener";
+    status = "disabled";
+    device = <&trackball_split>;
+
+    snipe {
+      layers = <LWR>;
+      input-processors = <&zip_xy_scaler 1 3>;
+    };
+
+    scroll {
+      layers = <RSE>;
+      input-processors = <&zip_xy_transform (INPUT_TRANSFORM_Y_INVERT)>, <&zip_xy_scaler 1 3>, <&zip_xy_to_scroll_mapper>;
+    };
+
+    move {
+      layers = <DEF MOU>;
+      input-processors = <&auto_mouse_layer MOU 3000>;
+    };
+  };
+
+  auto_mouse_layer: auto_mouse_layer {
+    compatible = "zmk,input-processor-temp-layer";
+    #input-processor-cells = <2>;
+    require-prior-idle-ms = <500>;
+    excluded-positions = <36 37 38 27 28 00 12 24 11 23 35>;
+  };
+};
