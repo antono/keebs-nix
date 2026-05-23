@@ -12,6 +12,7 @@ build & flash notes) and vendored `config/`:
 - **[HolySwitch TK44](keyboards/tk44/)** — unibody monosplit
 - **[Mriya46](keyboards/mriya46/)** — column-stagger split
 - **[Dao](keyboards/dao/)** — 42-key column-stagger split (+ ZMK Studio)
+- **[Charybdis Mini](keyboards/charybdis-mini/)** — 34-key column-stagger split
 
 Built on top of [zmk-nix](https://github.com/lilyinstarlight/zmk-nix).
 
@@ -19,10 +20,11 @@ Built on top of [zmk-nix](https://github.com/lilyinstarlight/zmk-nix).
 
 ```
 keyboards/
-  ergonaut-one/   config/ (+ build.yaml)   # board+shield split
-  tk44/           config/ (+ build.yaml)   # single custom board
-  mriya46/        config/ (+ build.yaml)   # split as two custom boards
-  dao/            config/ (+ build.yaml)   # split as two custom boards (+ studio)
+  ergonaut-one/     config/ (+ build.yaml)   # board+shield split
+  tk44/             config/ (+ build.yaml)   # single custom board
+  mriya46/          config/ (+ build.yaml)   # split as two custom boards
+  dao/              config/ (+ build.yaml)   # split as two custom boards (+ studio)
+  charybdis-mini/   config/ (+ build.yaml)   # board+shield split
 flake.nix
 ```
 
@@ -41,6 +43,8 @@ nix build .#mriya46-reset
 nix build .#dao
 nix build .#dao-studio        # left half built with ZMK Studio enabled
 nix build .#dao-reset
+nix build .#charybdis-mini
+nix build .#charybdis-mini-reset
 ```
 
 `nix build` produces a `result/` with stable names:
@@ -58,6 +62,9 @@ dao_right.uf2
 dao_studio_left.uf2
 dao_studio_right.uf2
 dao_settings_reset.uf2
+charybdis_mini_left.uf2
+charybdis_mini_right.uf2
+charybdis_mini_settings_reset.uf2
 ```
 
 ## Flash
@@ -73,6 +80,8 @@ nix run .#flash-mriya46-reset
 nix run .#flash-dao                   # prompts for left, then right
 nix run .#flash-dao-studio            # left half with ZMK Studio
 nix run .#flash-dao-reset
+nix run .#flash-charybdis-mini        # prompts for left, then right
+nix run .#flash-charybdis-mini-reset
 ```
 
 ## Dev shell
