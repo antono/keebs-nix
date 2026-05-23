@@ -159,17 +159,33 @@
             meta = mkMeta "ZMK settings-reset firmware for the Mriya46";
           };
 
-          # Collect every .uf2 under one output with stable, human-readable names.
-          firmware = pkgs.runCommand "keebs-firmware" { } ''
-            mkdir -p "$out"
-            cp ${ergonaut-one}/zmk_left.uf2        "$out/ergonaut_one_left.uf2"
-            cp ${ergonaut-one}/zmk_right.uf2       "$out/ergonaut_one_right.uf2"
-            cp ${ergonaut-one-reset}/zmk.uf2       "$out/ergonaut_one_settings_reset.uf2"
-            cp ${tk44}/zmk.uf2                     "$out/tk44.uf2"
-            cp ${mriya46}/zmk_left.uf2             "$out/mriya46_left.uf2"
-            cp ${mriya46}/zmk_right.uf2            "$out/mriya46_right.uf2"
-            cp ${mriya46-reset}/zmk.uf2            "$out/mriya46_settings_reset.uf2"
-          '';
+          # Collect every keyboard's firmware under one output with stable,
+          # human-readable names. Each build is copied generically by globbing
+          # its actual *.uf2 outputs and rewriting the leading "zmk" to the
+          # keyboard's prefix, so a split (zmk_left.uf2 + zmk_right.uf2 ->
+          # <prefix>_left.uf2 + <prefix>_right.uf2) and a single-firmware build
+          # (zmk.uf2 -> <prefix>.uf2) both work without hardcoding filenames.
+          # Adding a keyboard is one line in firmwareOutputs.
+          firmwareOutputs = {
+            ergonaut_one = ergonaut-one;
+            ergonaut_one_settings_reset = ergonaut-one-reset;
+            tk44 = tk44;
+            mriya46 = mriya46;
+            mriya46_settings_reset = mriya46-reset;
+          };
+          firmware = pkgs.runCommand "keebs-firmware" { } (
+            ''
+              mkdir -p "$out"
+            ''
+            + lib.concatStrings (
+              lib.mapAttrsToList (prefix: drv: ''
+                for f in ${drv}/*.uf2; do
+                  name="$(basename "$f")"
+                  cp "$f" "$out/${prefix}''${name#zmk}"
+                done
+              '') firmwareOutputs
+            )
+          );
 
           flashFor = firmware: zmk-nix.packages.${system}.flash.override { inherit firmware; };
         in
