@@ -80,16 +80,13 @@
             fetchZephyrDeps
             ;
 
-          # One West-deps fetch shared by every keyboard (identical west.yml).
-          #
-          # Two overrides keep this fetch fast and reliable, neither of which
-          # affects the FOD output hash (so it stays reproducible):
-          #   * GIT_CONFIG_* forces git to HTTP/1.1 with a large post buffer and
-          #     no low-speed abort, surviving GitHub's flaky HTTP/2 stream resets.
-          #   * a shallow + narrow `west update` fetches only the needed commits
-          #     instead of full history — ~10x less data (hours -> minutes on a
-          #     slow link). The fetcher discards git history into a stub anyway,
-          #     so the resulting source trees are identical to a full clone.
+          # One West-deps fetch shared by every keyboard (identical west.yml) —
+          # otherwise each keyboard gets its own multi-GiB clone. The shallow +
+          # narrow `west update` fetches only the needed commits instead of full
+          # history: far less data (minutes vs hours on a slow link), and small
+          # enough transfers that GitHub's occasional HTTP/2 stream resets don't
+          # bite. The fetcher discards git history into a stub, so the output
+          # (and FOD hash) is identical to a full clone.
           westDeps =
             (fetchZephyrDeps {
               name = "keebs-west-deps";
@@ -97,16 +94,7 @@
               westRoot = "config";
               hash = zephyrDepsHash;
             }).overrideAttrs
-              (old: {
-                env = (old.env or { }) // {
-                  GIT_CONFIG_COUNT = "3";
-                  GIT_CONFIG_KEY_0 = "http.version";
-                  GIT_CONFIG_VALUE_0 = "HTTP/1.1";
-                  GIT_CONFIG_KEY_1 = "http.postBuffer";
-                  GIT_CONFIG_VALUE_1 = "1048576000";
-                  GIT_CONFIG_KEY_2 = "http.lowSpeedLimit";
-                  GIT_CONFIG_VALUE_2 = "0";
-                };
+              (_: {
                 buildPhase = ''
                   runHook preBuild
                   west update --narrow --fetch-opt=--depth=1
