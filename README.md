@@ -5,15 +5,13 @@ keyboards. Every keyboard's complete ZMK config is **vendored** into this repo
 under `keyboards/`, so the flake has no dependency on any external config repo
 and reproduces identical firmware to the upstream sources.
 
-| Keyboard         | Board                          | Shield / notes           | Keymap                                |
-| ---------------- | ------------------------------ | ------------------------ | ------------------------------------- |
-| Ergonaut One     | `seeeduino_xiao_ble`           | `ergonaut_one_left/right`| [README](keyboards/ergonaut-one/)     |
-| Ergonaut One ↺   | `seeeduino_xiao_ble`           | `settings_reset`         | —                                     |
-| HolySwitch TK44  | `tk44` (custom)                | none                     | [README](keyboards/tk44/)             |
-| Mriya46          | `mriya_left` / `mriya_right`   | split, two custom boards | [README](keyboards/mriya46/)          |
-| Mriya46 ↺        | `nice_nano_v2`                 | `settings_reset`         | —                                     |
+Keyboards — each links to its own README (keymap diagram, board/shield details,
+build & flash notes) and vendored `config/`:
 
-Each keyboard has its own README with a rendered keymap diagram.
+- **[Ergonaut One](keyboards/ergonaut-one/)** — column-stagger split
+- **[HolySwitch TK44](keyboards/tk44/)** — unibody monosplit
+- **[Mriya46](keyboards/mriya46/)** — column-stagger split
+- **[Dao](keyboards/dao/)** — 42-key column-stagger split (+ ZMK Studio)
 
 Built on top of [zmk-nix](https://github.com/lilyinstarlight/zmk-nix).
 
@@ -24,6 +22,7 @@ keyboards/
   ergonaut-one/   config/ (+ build.yaml)   # board+shield split
   tk44/           config/ (+ build.yaml)   # single custom board
   mriya46/        config/ (+ build.yaml)   # split as two custom boards
+  dao/            config/ (+ build.yaml)   # split as two custom boards (+ studio)
 flake.nix
 ```
 
@@ -39,6 +38,9 @@ nix build .#ergonaut-one-reset
 nix build .#tk44
 nix build .#mriya46
 nix build .#mriya46-reset
+nix build .#dao
+nix build .#dao-studio        # left half built with ZMK Studio enabled
+nix build .#dao-reset
 ```
 
 `nix build` produces a `result/` with stable names:
@@ -51,6 +53,11 @@ tk44.uf2
 mriya46_left.uf2
 mriya46_right.uf2
 mriya46_settings_reset.uf2
+dao_left.uf2
+dao_right.uf2
+dao_studio_left.uf2
+dao_studio_right.uf2
+dao_settings_reset.uf2
 ```
 
 ## Flash
@@ -63,6 +70,9 @@ nix run .#flash-ergonaut-one-reset
 nix run .#flash-tk44
 nix run .#flash-mriya46               # prompts for left, then right
 nix run .#flash-mriya46-reset
+nix run .#flash-dao                   # prompts for left, then right
+nix run .#flash-dao-studio            # left half with ZMK Studio
+nix run .#flash-dao-reset
 ```
 
 ## Dev shell
@@ -106,9 +116,10 @@ the boards to HWMv2 and bump the pin.
 
 ## Updating West deps
 
-All three vendored configs ship a byte-identical `west.yml`, so a **single**
+All four vendored configs ship a byte-identical `west.yml`, so a **single**
 `zephyrDepsHash` in `flake.nix` covers every keyboard (one West fetch is shared
-by all).
+by all). Dao uses ZMK Studio and physical layouts, both already present on the
+pinned `v0.3-branch`, so it needs no separate fetch.
 
 To refresh (after editing a `west.yml`, or to pull a newer ZMK):
 
@@ -125,7 +136,13 @@ To refresh (after editing a `west.yml`, or to pull a newer ZMK):
   keyboard configs are vendored, not referenced.
 - The `src` suffix filter adds `.c` and `.yaml` on top of the upstream zmk-nix
   template list because the custom boards ship those (e.g. `tk44.c`,
-  `<board>.yaml`) and they'd otherwise be dropped from the build source.
+  `<board>.yaml`) and they'd otherwise be dropped from the build source. It also
+  keeps a board-level `Kconfig` (no suffix), which the Dao board ships for its
+  DCDC option.
+- **Dao** vendors its board from
+  [ergonautkb/ergonautkb-zmk-module](https://github.com/ergonautkb/ergonautkb-zmk-module)
+  (`boards/arm/dao` → `keyboards/dao/config/boards/arm/dao`) so the config is
+  self-contained like the others, rather than pulling the module via `west.yml`.
 - The shared West-deps fetch forces git to **HTTP/1.1** (via `GIT_CONFIG_*`
   env) to survive GitHub's flaky HTTP/2 stream resets during the large Zephyr
   clone. Env vars don't affect a fixed-output derivation's hash, so this stays

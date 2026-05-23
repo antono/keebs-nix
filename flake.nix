@@ -1,5 +1,5 @@
 {
-  description = "ZMK firmware for antono's keyboards (Ergonaut One + HolySwitch TK44 + Mriya46)";
+  description = "ZMK firmware for antono's keyboards (Ergonaut One + HolySwitch TK44 + Mriya46 + Dao)";
 
   inputs = {
     # Pinned to the same revision zmk-nix locks (and shared via follows below)
@@ -19,6 +19,10 @@
   #   keyboards/ergonaut-one  <- antono/ergonaut-one-zmk-config (config/)
   #   keyboards/tk44          <- antono/holyswitch-zmk-config @ antono-tk44 (config/)
   #   keyboards/mriya46       <- antono/holyswitch-zmk-config @ antono-mriya46 (config/)
+  #   keyboards/dao           <- antono/dao-zmk-config @ antono-layout (config/) +
+  #                              the dao board from ergonautkb/ergonautkb-zmk-module
+  #                              (boards/arm/dao -> config/boards/arm/dao), vendored
+  #                              so the config is self-contained like the others.
 
   outputs =
     {
@@ -53,7 +57,20 @@
         "_defconfig"
       ];
 
-      keebSrc = input: lib.sourceFilesBySuffices input srcSuffixes;
+      # Like lib.sourceFilesBySuffices, but also keeps a board-level `Kconfig`
+      # (no suffix). The dao board ships one for its BOARD_ENABLE_DCDC option;
+      # the suffix list alone would silently drop it.
+      keebSrc =
+        input:
+        lib.cleanSourceWith {
+          src = input;
+          filter =
+            name: type:
+            let
+              base = baseNameOf (toString name);
+            in
+            type == "directory" || base == "Kconfig" || lib.any (suf: lib.hasSuffix suf base) srcSuffixes;
+        };
 
       # West-dependency FOD hash. The FOD output is the fetched west projects,
       # determined solely by west.yml. All three vendored configs ship a
@@ -159,6 +176,48 @@
             meta = mkMeta "ZMK settings-reset firmware for the Mriya46";
           };
 
+          # Dao: 42-key split, each half its own custom nRF52840 board
+          # (dao_left / dao_right), left as the BLE central — same shape as
+          # Mriya46. The keymap chooses the Corne physical layout and uses
+          # ZMK Studio, both supported by the pinned v0.3-branch.
+          dao = buildSplitKeyboard {
+            name = "dao";
+            src = keebSrc ./keyboards/dao;
+            board = "dao_%PART%";
+            parts = [
+              "left"
+              "right"
+            ];
+            inherit zephyrDepsHash westDeps;
+            meta = mkMeta "ZMK firmware for the Dao (split, custom nRF52840 boards)";
+          };
+
+          # Same boards with ZMK Studio enabled on the central (left) half
+          # (adds the studio-rpc-usb-uart snippet + CONFIG_ZMK_STUDIO=y); the
+          # right peripheral is built plain, as Studio runs over the central.
+          dao-studio = buildSplitKeyboard {
+            name = "dao-studio";
+            src = keebSrc ./keyboards/dao;
+            board = "dao_%PART%";
+            parts = [
+              "left"
+              "right"
+            ];
+            enableZmkStudio = true;
+            inherit zephyrDepsHash westDeps;
+            meta = mkMeta "ZMK firmware for the Dao with ZMK Studio (split, custom nRF52840 boards)";
+          };
+
+          # Dao settings reset is built on nice_nano_v2 per its build.yaml.
+          dao-reset = buildKeyboard {
+            name = "dao-reset";
+            src = keebSrc ./keyboards/dao;
+            board = "nice_nano_v2";
+            shield = "settings_reset";
+            inherit zephyrDepsHash westDeps;
+            meta = mkMeta "ZMK settings-reset firmware for the Dao";
+          };
+
           # Collect every keyboard's firmware under one output with stable,
           # human-readable names. Each build is copied generically by globbing
           # its actual *.uf2 outputs and rewriting the leading "zmk" to the
@@ -172,6 +231,9 @@
             tk44 = tk44;
             mriya46 = mriya46;
             mriya46_settings_reset = mriya46-reset;
+            dao = dao;
+            dao_studio = dao-studio;
+            dao_settings_reset = dao-reset;
           };
           firmware = pkgs.runCommand "keebs-firmware" { } (
             ''
@@ -198,6 +260,9 @@
             tk44
             mriya46
             mriya46-reset
+            dao
+            dao-studio
+            dao-reset
             ;
 
           flash-ergonaut-one = flashFor ergonaut-one;
@@ -205,6 +270,9 @@
           flash-tk44 = flashFor tk44;
           flash-mriya46 = flashFor mriya46;
           flash-mriya46-reset = flashFor mriya46-reset;
+          flash-dao = flashFor dao;
+          flash-dao-studio = flashFor dao-studio;
+          flash-dao-reset = flashFor dao-reset;
 
           update = zmk-nix.packages.${system}.update;
         }
@@ -235,6 +303,7 @@
               draw ergonaut-one ergonaut_one.keymap ergonaut_one.json LAYOUT
               draw tk44          tk44.keymap         tk44.json          default
               draw mriya46       mriya.keymap        mriya.json         default
+              draw dao           dao.keymap          info.json          LAYOUT
             '';
           };
         in
