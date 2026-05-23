@@ -55,12 +55,13 @@
 
       keebSrc = input: lib.sourceFilesBySuffices input srcSuffixes;
 
-      # West-dependency FOD hash. The FOD output is the fetched west projects
-      # (ZMK@main + Zephyr + modules), determined solely by west.yml. All three
-      # vendored configs ship a byte-identical west.yml, so a single fetch (and
-      # hash) serves every keyboard. To refresh after a west.yml change, set
-      # this to nixpkgs.lib.fakeHash, rebuild, and copy back the `got:` hash.
-      zephyrDepsHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      # West-dependency FOD hash. The FOD output is the fetched west projects,
+      # determined solely by west.yml. All three vendored configs ship a
+      # byte-identical west.yml (pinned to ZMK v0.3-branch + Zephyr 3.5, matching
+      # zmk-nix's template — see "ZMK version" in the README), so one fetch and
+      # hash serve every keyboard. To refresh after a west.yml change, set this
+      # to nixpkgs.lib.fakeHash, rebuild, and copy back the reported `got:` hash.
+      zephyrDepsHash = "sha256-F03oJNHWmHlpFc1JHyvqX02WL+Pg6ZcNWpCaiDfJANA=";
 
       mkMeta = description: {
         inherit description;
@@ -80,10 +81,15 @@
             ;
 
           # One West-deps fetch shared by every keyboard (identical west.yml).
-          # The GIT_CONFIG_* env forces git to HTTP/1.1 with a large post buffer
-          # and no low-speed abort, which survives GitHub's flaky HTTP/2 stream
-          # resets during the large Zephyr clone. Env does not affect an FOD's
-          # output hash, so this stays reproducible.
+          #
+          # Two overrides keep this fetch fast and reliable, neither of which
+          # affects the FOD output hash (so it stays reproducible):
+          #   * GIT_CONFIG_* forces git to HTTP/1.1 with a large post buffer and
+          #     no low-speed abort, surviving GitHub's flaky HTTP/2 stream resets.
+          #   * a shallow + narrow `west update` fetches only the needed commits
+          #     instead of full history — ~10x less data (hours -> minutes on a
+          #     slow link). The fetcher discards git history into a stub anyway,
+          #     so the resulting source trees are identical to a full clone.
           westDeps =
             (fetchZephyrDeps {
               name = "keebs-west-deps";
@@ -101,6 +107,11 @@
                   GIT_CONFIG_KEY_2 = "http.lowSpeedLimit";
                   GIT_CONFIG_VALUE_2 = "0";
                 };
+                buildPhase = ''
+                  runHook preBuild
+                  west update --narrow --fetch-opt=--depth=1
+                  runHook postBuild
+                '';
               });
 
           ergonaut-one = buildSplitKeyboard {
@@ -192,6 +203,42 @@
           flash-mriya46-reset = flashFor mriya46-reset;
 
           update = zmk-nix.packages.${system}.update;
+        }
+      );
+
+      # `nix run .#draw-keymaps` (re)renders the per-keyboard layout SVGs under
+      # keyboards/<kb>/keymap-drawer/ from the vendored keymaps + local physical
+      # layout JSONs, using the shared keymap-drawer/config.yaml. Run from the
+      # repo root.
+      apps = forAllSystems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+          draw-keymaps = pkgs.writeShellApplication {
+            name = "draw-keymaps";
+            runtimeInputs = [ pkgs.keymap-drawer ];
+            text = ''
+              cfg="keymap-drawer/config.yaml"
+              draw() { # <kb-dir> <keymap-file> <layout-json> <layout-name>
+                local kb="$1" keymap="$2" json="$3" layout="$4"
+                local d="keyboards/$kb/keymap-drawer"
+                mkdir -p "$d"
+                keymap -c "$cfg" parse -z "keyboards/$kb/config/$keymap" > "$d/$kb.yaml"
+                keymap -c "$cfg" draw "$d/$kb.yaml" \
+                  -j "keyboards/$kb/config/$json" -l "$layout" > "$d/$kb.svg"
+                echo "drew keyboards/$kb/keymap-drawer/$kb.svg"
+              }
+              draw ergonaut-one ergonaut_one.keymap ergonaut_one.json LAYOUT
+              draw tk44          tk44.keymap         tk44.json          default
+              draw mriya46       mriya.keymap        mriya.json         default
+            '';
+          };
+        in
+        {
+          draw-keymaps = {
+            type = "app";
+            program = "${draw-keymaps}/bin/draw-keymaps";
+          };
         }
       );
 
