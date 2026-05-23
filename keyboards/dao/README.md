@@ -1,5 +1,14 @@
 # Dao
 
+|  |  |
+|---|---|
+| **MCU / board** | custom nRF52840 (QIAA) — ZMK boards `dao_{left,right}`, no shield |
+| **Layout** | 42 keys · column-staggered **split** (left = BLE central) |
+| **Switches** | Kailh Choc v1 (PG1350) · hot-swap sockets |
+| **Designer** | [Rafael Yumagulov](https://github.com/yumagulovrn) · keymap by antono |
+| **Hardware / PCB** | [yumagulovrn/dao-choc-ble](https://github.com/yumagulovrn/dao-choc-ble) · [kbd.news](https://kbd.news/Dao-Choc-BLE-1146.html) |
+| **Features** | BLE · USB · deep sleep · battery · ZMK Studio · Corne/full physical layouts |
+
 42-key column-staggered **split** keyboard. Each half is its own custom
 nRF52840 board — ZMK builds `dao_left` and `dao_right` directly (no shield),
 with the **left** half as the BLE central. Hardware and base config by

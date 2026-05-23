@@ -1,5 +1,14 @@
 # Ergonaut One
 
+|  |  |
+|---|---|
+| **MCU / board** | 2× [Seeeduino XIAO BLE](https://wiki.seeedstudio.com/XIAO_BLE/) (nRF52840) — ZMK board `seeeduino_xiao_ble` + shield `ergonaut_one_{left,right}` |
+| **Layout** | 42 keys · column-staggered **split** (left = BLE central) |
+| **Switches** | Gateron Low Profile (KS-33 v2) · hot-swap sockets |
+| **Designer** | [Ergonaut Keyboards](https://ergonautkb.com) |
+| **Hardware / docs** | [ergonautkb/one](https://github.com/ergonautkb/one) · [docs](https://ergonautkb.com/docs/keyboards/ergonaut-one/intro) |
+| **Features** | BLE · USB · deep sleep · battery reporting |
+
 42-key column-staggered **split** keyboard. Each half is a
 [Seeeduino XIAO BLE](https://wiki.seeedstudio.com/XIAO_BLE/); ZMK builds it as
 board `seeeduino_xiao_ble` + shield `ergonaut_one_left` / `ergonaut_one_right`,

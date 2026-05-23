@@ -1,5 +1,14 @@
 # Mriya46
 
+|  |  |
+|---|---|
+| **MCU / board** | Holyiot-18010 module (nRF52840) — custom ZMK boards `mriya_{left,right}`, no shield |
+| **Layout** | 46 keys · column-staggered **split** (left = BLE central) |
+| **Switches** | not documented |
+| **Designer** | [Andrei Gaevskii (Ladniy)](https://github.com/Ladniy) |
+| **Hardware / docs** | [holyswitch.github.io](https://holyswitch.github.io) (no public PCB repo) |
+| **Features** | BLE · USB · deep sleep · battery + charge LED |
+
 46-key column-staggered **split** keyboard. Each half is its own custom
 nRF52840 board — ZMK builds `mriya_left` and `mriya_right` directly (no shield),
 with the **left** half as the BLE central. Designed by
