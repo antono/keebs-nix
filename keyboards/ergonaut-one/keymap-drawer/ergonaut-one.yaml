@@ -1,0 +1,177 @@
+layout: {zmk_keyboard: ergonaut_one}
+layers:
+  MAIN:
+  - {t: ']', h: Gui}
+  - Q
+  - W
+  - E
+  - R
+  - T
+  - Y
+  - U
+  - I
+  - O
+  - P
+  - {t: '[', h: Gui}
+  - {t: '`', h: Ctrl}
+  - A
+  - S
+  - D
+  - F
+  - G
+  - H
+  - J
+  - K
+  - L
+  - ;
+  - {t: '''', h: Ctrl}
+  - {t: '-', h: Alt}
+  - Z
+  - {t: X, h: Ctl+X}
+  - {t: C, h: Ctl+C}
+  - {t: V, h: Ctl+V}
+  - B
+  - N
+  - M
+  - ','
+  - .
+  - /
+  - {t: \, h: Alt}
+  - {t: ↹, h: NUM}
+  - {t: ␣, h: Shift}
+  - {t: ⏎, h: SYM}
+  - {t: Esc, h: SYM}
+  - {t: ⌫, h: Shift}
+  - {t: ⌦, h: NUM}
+  SYM:
+  - {t: F1, h: Gui}
+  - F2
+  - F3
+  - F4
+  - F5
+  - F6
+  - F7
+  - F8
+  - F9
+  - F10
+  - F11
+  - {t: F12, h: Gui}
+  - {t: +, h: Ctrl}
+  - '!'
+  - '@'
+  - '#'
+  - $
+  - '%'
+  - ^
+  - '&'
+  - '*'
+  - (
+  - )
+  - {t: '-', h: Ctrl}
+  - {t: '=', h: Alt}
+  - '1'
+  - '2'
+  - '3'
+  - '4'
+  - '5'
+  - '6'
+  - '7'
+  - '8'
+  - '9'
+  - '0'
+  - Alt
+  - {t: ↹, h: adjust}
+  - {t: ▽, type: trans}
+  - {type: held}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ⌦, h: adjust}
+  NUM:
+  - {t: KP NUM, h: Gui}
+  - KP SLASH
+  - KP 7
+  - KP 8
+  - KP 9
+  - KP MINUS
+  - Vol Up
+  - Home
+  - Print Scrn
+  - Page Up
+  - SLCK
+  - {t: CLCK, h: Gui}
+  - {t: '=', h: Ctrl}
+  - KP MULTIPLY
+  - KP 4
+  - KP 5
+  - KP 6
+  - KP PLUS
+  - ←
+  - ↓
+  - ↑
+  - →
+  - Insert
+  - {t: APP, h: Ctrl}
+  - Alt
+  - KP 0
+  - KP 1
+  - KP 2
+  - KP 3
+  - KP DOT
+  - Vol Down
+  - End
+  - ↓
+  - Page Down
+  - Pause Break
+  - Alt
+  - {type: held}
+  - {t: ▽, type: trans}
+  - {t: ⏎, h: adjust}
+  - {t: Esc, h: adjust}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  adjust:
+  - Boot
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - Boot
+  - BT CLR
+  - BT 1
+  - BT 2
+  - BT 3
+  - BT 4
+  - BT 5
+  - BT 5
+  - BT 4
+  - BT 3
+  - BT 2
+  - BT 1
+  - BT CLR
+  - Reset
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - ''
+  - Reset
+  - {type: held}
+  - ''
+  - {type: held}
+  - ''
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+combos:
+- p: [17, 20]
+  k: CLCK
