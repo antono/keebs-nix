@@ -5,13 +5,15 @@ keyboards. Every keyboard's complete ZMK config is **vendored** into this repo
 under `keyboards/`, so the flake has no dependency on any external config repo
 and reproduces identical firmware to the upstream sources.
 
-| Keyboard         | Board                          | Shield / notes           |
-| ---------------- | ------------------------------ | ------------------------ |
-| Ergonaut One     | `seeeduino_xiao_ble`           | `ergonaut_one_left/right`|
-| Ergonaut One ↺   | `seeeduino_xiao_ble`           | `settings_reset`         |
-| HolySwitch TK44  | `tk44` (custom)                | none                     |
-| Mriya46          | `mriya_left` / `mriya_right`   | split, two custom boards |
-| Mriya46 ↺        | `nice_nano_v2`                 | `settings_reset`         |
+| Keyboard         | Board                          | Shield / notes           | Keymap                                |
+| ---------------- | ------------------------------ | ------------------------ | ------------------------------------- |
+| Ergonaut One     | `seeeduino_xiao_ble`           | `ergonaut_one_left/right`| [README](keyboards/ergonaut-one/)     |
+| Ergonaut One ↺   | `seeeduino_xiao_ble`           | `settings_reset`         | —                                     |
+| HolySwitch TK44  | `tk44` (custom)                | none                     | [README](keyboards/tk44/)             |
+| Mriya46          | `mriya_left` / `mriya_right`   | split, two custom boards | [README](keyboards/mriya46/)          |
+| Mriya46 ↺        | `nice_nano_v2`                 | `settings_reset`         | —                                     |
+
+Each keyboard has its own README with a rendered keymap diagram.
 
 Built on top of [zmk-nix](https://github.com/lilyinstarlight/zmk-nix).
 
@@ -75,12 +77,38 @@ Everything lives here now — edit the files under `keyboards/<kb>/config/`
 directly (e.g. `keyboards/tk44/config/tk44.keymap`) and rebuild. No external
 repos are involved.
 
+## Keymap diagrams
+
+Each keyboard's `README.md` embeds a layout diagram rendered by
+[keymap-drawer](https://github.com/caksoylar/keymap-drawer) into
+`keyboards/<kb>/keymap-drawer/<kb>.svg`. Regenerate them all after editing a
+keymap:
+
+```sh
+nix run .#draw-keymaps
+```
+
+It parses each `config/<kb>.keymap` and draws it against that keyboard's local
+physical-layout JSON (`config/*.json`), using the shared
+`keymap-drawer/config.yaml`.
+
+## ZMK version
+
+Upstream the configs track `revision: main`, but ZMK `main` has migrated to
+Zephyr's Hardware Model v2, which renamed the boards these (HWMv1) configs use
+(`seeeduino_xiao_ble` → `xiao_ble`, `nice_nano_v2` → `nice_nano`) and would not
+build them. So the vendored `west.yml`s pin ZMK to **`v0.3-branch`**
+(`acfd8e5e…`) + **Zephyr 3.5** (`dacab487…`) — the same known-good, pre-HWMv2
+revision zmk-nix's template uses. This keeps the HWMv1 board names and legacy
+custom-board definitions valid, avoids the huge `hal_renesas` module (added in
+later Zephyr), and is fully reproducible. To move to a newer ZMK you'd migrate
+the boards to HWMv2 and bump the pin.
+
 ## Updating West deps
 
-All three vendored configs pin ZMK at `revision: main` and ship a
-byte-identical `west.yml`, so a **single** `zephyrDepsHash` in `flake.nix`
-covers every keyboard (one West fetch is shared by all). The hash is tied to
-whatever ZMK `main` resolved to when it was last computed.
+All three vendored configs ship a byte-identical `west.yml`, so a **single**
+`zephyrDepsHash` in `flake.nix` covers every keyboard (one West fetch is shared
+by all).
 
 To refresh (after editing a `west.yml`, or to pull a newer ZMK):
 
