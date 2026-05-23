@@ -1,4 +1,4 @@
-# HolySwitch TK44
+# Ladniy/TK44
 
 44-key unibody keyboard with angled/rotated columns. Single custom **`tk44`**
 board built around an nRF52840 (QIAA) — no shield, no split. Designed by
