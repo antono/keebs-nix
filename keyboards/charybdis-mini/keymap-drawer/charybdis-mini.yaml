@@ -255,6 +255,7 @@ layers:
 combos:
 - p: [19, 22]
   k: CLCK
+  draw_separate: true
 - p: [13, 16]
   k: {t: default, h: toggle}
 - p: [39, 40]
