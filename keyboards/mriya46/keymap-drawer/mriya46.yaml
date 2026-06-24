@@ -25,8 +25,8 @@ layers:
   - J
   - K
   - L
-  - ';'
-  - {t: "'", h: Ctrl}
+  - ;
+  - {t: '''', h: Ctrl}
   - {t: '-', h: Alt}
   - Z
   - {t: X, h: Ctl+X}
@@ -36,7 +36,7 @@ layers:
   - N
   - M
   - ','
-  - '.'
+  - .
   - /
   - {t: \, h: Alt}
   - Gui
@@ -129,7 +129,7 @@ layers:
   - KP DOT
   - Vol Down
   - End
-  - ↓
+  - MUTE
   - Page Down
   - Pause Break
   - Alt
@@ -181,9 +181,9 @@ layers:
   - ''
   - Reset
   - {t: ▽, type: trans}
-  - ''
+  - {type: held}
   - {t: ▽, type: trans}
-  - ''
+  - {type: held}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
