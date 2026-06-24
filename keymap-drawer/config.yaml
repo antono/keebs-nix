@@ -49,6 +49,7 @@ parse_config:
     combo_f12:    {align: bottom}
     combo_btclr:  {align: bottom}
     combo_play:   {align: right}
+    combo_caps:   {draw_separate: true}
     combo_capswd: {draw_separate: true}
     combo_semi:   {draw_separate: true}
     combo_grave:  {draw_separate: true}

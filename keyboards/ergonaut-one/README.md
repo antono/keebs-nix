@@ -28,7 +28,11 @@ nix run  .#flash-ergonaut-one       # prompts for left, then right
 nix run  .#flash-ergonaut-one-reset # wipe BLE/settings if pairing breaks
 ```
 
-Config lives in [`config/`](./config). The diagram is generated with
+Config lives in [`config/`](./config). The diagram above is generated with
 [keymap-drawer](https://github.com/caksoylar/keymap-drawer) from
-`config/ergonaut_one.keymap` + the `config/ergonaut_one.json` physical layout —
-regenerate it with `nix run .#draw-keymaps` from the repo root.
+`config/ergonaut_one.keymap` + the `config/ergonaut_one.json` physical layout.
+After editing the keymap, regenerate it from the repo root:
+
+```sh
+nix run .#draw-keymaps   # re-renders keymap-drawer/ergonaut-one.svg
+```
