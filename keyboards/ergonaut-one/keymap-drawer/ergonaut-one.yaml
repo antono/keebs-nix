@@ -173,6 +173,6 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
 combos:
-- p: [19, 21]
+- p: [19, 22]
   k: CLCK
   draw_separate: true

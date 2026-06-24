@@ -23,7 +23,7 @@
         require-prior-idle-ms = <250>;
 
         combo_caps {
-            key-positions = <19 21>;
+            key-positions = <19 22>;
             bindings = <&kp CLCK>;
         };
     };
