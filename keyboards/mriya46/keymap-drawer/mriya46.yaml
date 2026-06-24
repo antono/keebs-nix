@@ -1,8 +1,8 @@
 layout: {zmk_keyboard: mriya}
 layers:
-  default:
-  - LWIN
-  - '`'
+  MAIN:
+  - Gui
+  - {t: ']', h: Gui}
   - Q
   - W
   - E
@@ -13,9 +13,9 @@ layers:
   - I
   - O
   - P
-  - '['
-  - {t: ']', h: RWIN}
-  - Ctrl
+  - {t: '[', h: Gui}
+  - Gui
+  - {t: '`', h: Ctrl}
   - A
   - S
   - D
@@ -25,32 +25,31 @@ layers:
   - J
   - K
   - L
-  - ;
-  - {t: '''', h: Ctrl}
-  - Alt
+  - ';'
+  - {t: "'", h: Ctrl}
+  - {t: '-', h: Alt}
   - Z
-  - X
-  - C
-  - V
+  - {t: X, h: Ctl+X}
+  - {t: C, h: Ctl+C}
+  - {t: V, h: Ctl+V}
   - B
   - N
   - M
   - ','
-  - .
+  - '.'
   - /
   - {t: \, h: Alt}
   - Gui
-  - {t: ↹, h: raise}
+  - {t: ↹, h: NUM}
   - {t: ␣, h: Shift}
-  - {t: ⏎, h: lower}
-  - {t: Esc, h: lower}
+  - {t: ⏎, h: SYM}
+  - {t: Esc, h: SYM}
   - {t: ⌫, h: Shift}
-  - {t: ⌦, h: raise}
-  - {t: ']', h: Gui}
-  lower:
+  - {t: ⌦, h: NUM}
+  - Gui
+  SYM:
   - {t: ▽, type: trans}
-  - _
-  - F1
+  - {t: F1, h: Gui}
   - F2
   - F3
   - F4
@@ -62,6 +61,7 @@ layers:
   - F10
   - F11
   - {t: F12, h: Gui}
+  - {t: ▽, type: trans}
   - {t: +, h: Ctrl}
   - '!'
   - '@'
@@ -85,7 +85,7 @@ layers:
   - '8'
   - '9'
   - '0'
-  - {t: ▽, type: trans}
+  - Alt
   - {t: ▽, type: trans}
   - {t: ↹, h: adjust}
   - {t: ▽, type: trans}
@@ -94,9 +94,9 @@ layers:
   - {t: ▽, type: trans}
   - {t: ⌦, h: adjust}
   - {t: ▽, type: trans}
-  raise:
+  NUM:
   - {t: ▽, type: trans}
-  - KP NUM
+  - {t: KP NUM, h: Gui}
   - KP SLASH
   - KP 7
   - KP 8
@@ -107,7 +107,7 @@ layers:
   - Print Scrn
   - Page Up
   - SLCK
-  - Caps Lock
+  - {t: CLCK, h: Gui}
   - {t: ▽, type: trans}
   - {t: '=', h: Ctrl}
   - KP MULTIPLY
@@ -121,7 +121,7 @@ layers:
   - →
   - Insert
   - {t: APP, h: Ctrl}
-  - {t: ▽, type: trans}
+  - Alt
   - KP 0
   - KP 1
   - KP 2
@@ -132,7 +132,7 @@ layers:
   - ↓
   - Page Down
   - Pause Break
-  - {t: ▽, type: trans}
+  - Alt
   - {t: ▽, type: trans}
   - {type: held}
   - {t: ▽, type: trans}
@@ -180,11 +180,15 @@ layers:
   - ''
   - ''
   - Reset
-  - ''
-  - {type: held}
-  - ''
-  - {type: held}
   - {t: ▽, type: trans}
   - ''
   - {t: ▽, type: trans}
   - ''
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+combos:
+- p: [21, 24]
+  k: CLCK
+  draw_separate: true
