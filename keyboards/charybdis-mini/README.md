@@ -2,7 +2,7 @@
 
 |  |  |
 |---|---|
-| **MCU / board** | 2× [Seeeduino XIAO BLE](https://wiki.seeedstudio.com/XIAO_BLE/) (nRF52840) — ZMK board `seeeduino_xiao_ble` + shield `charybdis_{left,right}` |
+| **MCU / board** | 2× [nice!nano v2](https://nicekeyboards.com/nice-nano/) (nRF52840) — ZMK board `nice_nano_v2` + shield `charybdis_{left,right}` |
 | **Layout** | 34 keys · column-staggered **split** with thumb cluster (left = BLE central) |
 | **Switches** | MX · hot-swap sockets |
 | **Designer** | [Bastard Keyboards](https://bastardkb.com) |
@@ -10,8 +10,8 @@
 | **Features** | BLE · USB · deep sleep · battery reporting |
 
 34-key column-staggered **split** keyboard with integrated trackball. Each half is a
-[Seeeduino XIAO BLE](https://wiki.seeedstudio.com/XIAO_BLE/); ZMK builds it as
-board `seeeduino_xiao_ble` + shield `charybdis_left` / `charybdis_right`,
+[nice!nano v2](https://nicekeyboards.com/nice-nano/); ZMK builds it as
+board `nice_nano_v2` + shield `charybdis_left` / `charybdis_right`,
 with the **left** half as the BLE central.
 
 ## Keymap

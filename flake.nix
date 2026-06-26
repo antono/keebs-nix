@@ -78,7 +78,7 @@
       # zmk-nix's template — see "ZMK version" in the README), so one fetch and
       # hash serve every keyboard. To refresh after a west.yml change, set this
       # to nixpkgs.lib.fakeHash, rebuild, and copy back the reported `got:` hash.
-      zephyrDepsHash = "sha256-F03oJNHWmHlpFc1JHyvqX02WL+Pg6ZcNWpCaiDfJANA=";
+      zephyrDepsHash = "sha256-lEMy05wxNd44gTh5JQiIvkmHkiwScMzw4T+kPrmr9qs=";
 
       mkMeta = description: {
         inherit description;
@@ -97,17 +97,26 @@
             fetchZephyrDeps
             ;
 
-          # One West-deps fetch shared by every keyboard (identical west.yml) —
-          # otherwise each keyboard gets its own multi-GiB clone. The shallow +
-          # narrow `west update` fetches only the needed commits instead of full
-          # history: far less data (minutes vs hours on a slow link), and small
-          # enough transfers that GitHub's occasional HTTP/2 stream resets don't
-          # bite. The fetcher discards git history into a stub, so the output
-          # (and FOD hash) is identical to a full clone.
+          # One West-deps fetch shared by every keyboard — otherwise each
+          # keyboard gets its own multi-GiB clone. Every keyboard pins the same
+          # zmk + zephyr revisions, so a single fetch serves them all; the only
+          # divergence is that charybdis-mini additionally needs the PMW3610
+          # trackball driver. We therefore source the shared fetch from
+          # charybdis-mini's west.yml — the superset manifest (zmk + zephyr +
+          # driver) — and every other keyboard's deps are a subset of it. The
+          # driver is inert for builds that don't reference it in a shield.
+          # (Invariant: if another keyboard ever needs an extra module, either
+          # add it to this manifest or move the fetch source to a new superset.)
+          #
+          # The shallow + narrow `west update` fetches only the needed commits
+          # instead of full history: far less data (minutes vs hours on a slow
+          # link), and small enough transfers that GitHub's occasional HTTP/2
+          # stream resets don't bite. The fetcher discards git history into a
+          # stub, so the output (and FOD hash) is identical to a full clone.
           westDeps =
             (fetchZephyrDeps {
               name = "keebs-west-deps";
-              src = keebSrc ./keyboards/tk44;
+              src = keebSrc ./keyboards/charybdis-mini;
               westRoot = "config";
               hash = zephyrDepsHash;
             }).overrideAttrs
@@ -221,21 +230,24 @@
           charybdis-mini = buildSplitKeyboard {
             name = "charybdis-mini";
             src = keebSrc ./keyboards/charybdis-mini;
-            board = "seeeduino_xiao_ble";
+            board = "nice_nano_v2";
             shield = "charybdis_%PART%";
             parts = [
               "left"
               "right"
             ];
             inherit zephyrDepsHash westDeps;
-            meta = mkMeta "ZMK firmware for the Charybdis Mini (split, Seeeduino XIAO BLE)";
+            meta = mkMeta "ZMK firmware for the Charybdis Mini (split, nice!nano v2)";
           };
 
-          # Charybdis Mini settings reset is built on seeeduino_xiao_ble.
+          # Charybdis Mini settings reset is built on nice_nano_v2. The vendored
+          # BastardKB charybdis shield wires its matrix through the &pro_micro
+          # connector, which the nice!nano defines (the Seeeduino XIAO BLE does
+          # not — it exposes &xiao_d instead).
           charybdis-mini-reset = buildKeyboard {
             name = "charybdis-mini-reset";
             src = keebSrc ./keyboards/charybdis-mini;
-            board = "seeeduino_xiao_ble";
+            board = "nice_nano_v2";
             shield = "settings_reset";
             inherit zephyrDepsHash westDeps;
             meta = mkMeta "ZMK settings-reset firmware for the Charybdis Mini";

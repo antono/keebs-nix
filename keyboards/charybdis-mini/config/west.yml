@@ -4,18 +4,42 @@ manifest:
       url-base: https://github.com/zmkfirmware
     - name: badjeff
       url-base: https://github.com/badjeff
-    - name: minhe7735 
-      url-base: https://github.com/minhe7735
   projects:
     - name: zmk
       remote: zmkfirmware
-      revision: main
+      revision: acfd8e5ea76cf23ad1c9b6b99848f97a95224257  # v0.3-branch
       import: app/west.yml
+    - name: zephyr
+      remote: zmkfirmware
+      revision: dacab4875df72109b96cc8977547a0dc04875bcd  # v3.5.0+zmk-fixes
+      import:
+        name-blocklist:
+          - ci-tools
+          - hal_altera
+          - hal_cypress
+          - hal_infineon
+          - hal_microchip
+          - hal_nxp
+          - hal_openisa
+          - hal_silabs
+          - hal_xtensa
+          - hal_st
+          - hal_ti
+          - loramac-node
+          - mcuboot
+          - mcumgr
+          - net-tools
+          - openthread
+          - edtt
+          - trusted-firmware-m
+    # PMW3610 trackball sensor driver — required by this keyboard's shield only.
+    # This makes charybdis-mini's manifest the superset that the shared west
+    # fetch is sourced from (see flake.nix); no other keyboard lists it.
     - name: zmk-pmw3610-driver
       remote: badjeff
-      revision: main
-    - name: prospector-zmk-module
-      remote: minhe7735 
-      revision: reduce-size
+      # Last commit before the "pixart,pmw3610-alt" rename (76744d0), which
+      # targets Zephyr 4.1. Our pinned ZMK is on Zephyr 3.5, and the charybdis
+      # config uses the original "pixart,pmw3610" / CONFIG_PMW3610* names.
+      revision: ac2aefced34219c4843fab22a57c4dfbe968d7db
   self:
     path: config
