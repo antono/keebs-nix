@@ -17,6 +17,11 @@ board built around an nRF52840 (QIAA) — no shield, no split. Designed by
 
 ![TK44 keymap](./keymap-drawer/tk44.svg)
 
+## Case
+
+A 3D-printable tray (replaces the FR-4 bottom) and wrist rests:
+[antono/tk44-case](https://github.com/antono/tk44-case).
+
 ## Build & flash
 
 From the repo root:
